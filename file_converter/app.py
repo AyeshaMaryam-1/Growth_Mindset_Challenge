@@ -62,22 +62,25 @@ if uploaded_files:
         if st.button(f"Convert {file.name}"):
             buffer = BytesIO()
             if conversion_type == "CSV":
-                df.to_csv(buffer,index=False)
+                df.to_csv(buffer, index=False)
                 file_name = file.name.replace(file_ext, ".csv")
                 mime_type = "text/csv"
 
             elif conversion_type == "Excel":
-                df.to_excel(buffer,index=False)
+                with pd.ExcelWriter(buffer, engine='xlsxwriter') as writer:
+                    df.to_excel(writer, index=False)
                 file_name = file.name.replace(file_ext, ".xlsx")
                 mime_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            
             buffer.seek(0)
 
             # Download Button
             st.download_button(
-                label=f"⬇️Download {file.name} as {conversion_type}",
+                label=f"⬇️ Download {file.name} as {conversion_type}",
                 data=buffer,
                 file_name=file_name,
                 mime=mime_type
             )
+
 
 st.success("🎉All files processed!")
