@@ -17,7 +17,7 @@ if uploaded_files:
         if file_ext == ".csv":
             df = pd.read_csv(file)
         elif file_ext == ".xlsx":
-            df = pd.read_excel(file)
+            df = pd.read_excel(file, engine="openpyxl")
         else:
             st.error(f"⚠️Unsupported file type: {file_ext}")
             continue
@@ -52,12 +52,12 @@ if uploaded_files:
         df = df[columns]
 
         # Create Some Visualization
-        st.subheader("📊Data Visualization")
+        st.subheader("📊 Data Visualization")
         if st.checkbox(f"Show Visualization for {file.name}"):
             st.bar_chart(df.select_dtypes(include='number').iloc[:,:2])
 
         # Convert the file -> CSV to Excel
-        st.subheader("🔄Conversion Options")
+        st.subheader("🔄 Conversion Options")
         conversion_type = st.radio(f"Convert {file.name} to:",["CSV","Excel"], key=file.name)
         if st.button(f"Convert {file.name}"):
             buffer = BytesIO()
@@ -67,7 +67,8 @@ if uploaded_files:
                 mime_type = "text/csv"
 
             elif conversion_type == "Excel":
-                with pd.ExcelWriter(buffer, engine='xlsxwriter') as writer:
+                with pd.ExcelWriter(buffer, engine="openpyxl") as writer:
+
                     df.to_excel(writer, index=False)
                 file_name = file.name.replace(file_ext, ".xlsx")
                 mime_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
