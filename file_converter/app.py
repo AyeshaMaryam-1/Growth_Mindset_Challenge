@@ -52,12 +52,12 @@ if uploaded_files:
         df = df[columns]
 
         # Create Some Visualization
-        st.subheader("📊 Data Visualization")
+        st.subheader("📊Data Visualization")
         if st.checkbox(f"Show Visualization for {file.name}"):
             st.bar_chart(df.select_dtypes(include='number').iloc[:,:2])
 
         # Convert the file -> CSV to Excel
-        st.subheader("🔄 Conversion Options")
+        st.subheader("🔄Conversion Options")
         conversion_type = st.radio(f"Convert {file.name} to:",["CSV","Excel"], key=file.name)
         if st.button(f"Convert {file.name}"):
             buffer = BytesIO()
